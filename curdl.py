@@ -20,8 +20,18 @@ class CURDL_code:
     Where 0 is the central unit. Here we know that G is on the left side of A since its down side is already
     occupied by its parent cell, 0.
     """
-    def __init__(self, list=[]):
+
+    def __init__(self, initial_code=['', '', '', '']):
         """
-        --list: If not empty, will be used as an initial code.
+        --initial_code: If not empty, will be used as an initial code.
         """
-        self.list = list
+        self.code = initial_code
+
+    def check_validity(self):
+        """
+        Checks that the CURDL code is valid, i.e:
+        - For every cell, another sequence of 3 children is added. This is is equivalent to
+          len(code) = 4 + 3 * ne    where ne is the number of non-empty cells (excluding the central unit)
+        :return: True iff the code checks all rules
+        """
+        return len(self.code) == 4 + 3 * len([cell for cell in self.code if cell != ''])

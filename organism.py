@@ -3,6 +3,8 @@ Defines the Organism class.
 """
 from curdl import CURDL_code
 from resources import ResourcesStock
+from cells.cell import CentralCell
+from cells.cell_types import _cell_types
 
 
 class Organism:
@@ -19,6 +21,25 @@ class Organism:
             self.curdl_code = curdl_code
 
         self.stock = ResourcesStock()
+
+    def function(self):
+        """
+        Updates the organism by activating all of its cells sequentially.
+        Returns True iff the organism survives.
+        """
+        # Resets all temporary resources to zero
+        self.stock.clear()
+
+        # Sequentially activates all cells
+        for cell_code in self.curdl_code.cell_codes():
+            cell = _cell_types[cell_code]()
+            cell.function(self)
+
+        # Checks if some resources are missing. If so, the organism dies
+        for amount in self.stock.get_resources().values():
+            if amount < 0:
+                return False
+        return True
 
     def add_resource(self, resource_name, amount):
         """

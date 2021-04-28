@@ -27,6 +27,14 @@ class CURDL_code:
         """
         self.code = initial_code
 
+    def cell_codes(self):
+        """
+        Iterates over all cells in the code.
+        """
+        for cell in self.code:
+            if cell != '':
+                yield cell
+
     def check_validity(self):
         """
         Checks that the CURDL code is valid, i.e:

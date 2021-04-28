@@ -34,3 +34,15 @@ class ResourcesStock:
         :return: the amount of the said resource AFTER it was removed from the stock.
         """
         return self.add(resource_name, -amount)
+
+    def clear(self):
+        """
+        Resets the stock to an empty stock.
+        """
+        self.map = dict()
+
+    def get_resources(self):
+        """
+        Returns the resources dictionary
+        """
+        return self.map.copy()

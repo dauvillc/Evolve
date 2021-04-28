@@ -35,3 +35,9 @@ class CURDL_code:
         :return: True iff the code checks all rules
         """
         return len(self.code) == 4 + 3 * len([cell for cell in self.code if cell != ''])
+
+    def number_of_cells(self):
+        """
+        Returns the number of cells in the curdl code.
+        """
+        return len([cell for cell in self.code if cell != ''])

@@ -23,9 +23,7 @@ class ResourcesStock:
         :return: The current amount of the said resource in the stock after the addition.
         """
         if resource_name in self.map:
-            # Watchout, if the user entered a negative amount, the stock
-            # cannot fall below zero
-            self.map[resource_name] = max(0, self.map[resource_name] + amount)
+            self.map[resource_name] += amount
         else:
             self.map[resource_name] = amount
         return self.map[resource_name]

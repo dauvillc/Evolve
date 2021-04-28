@@ -19,3 +19,26 @@ class Organism:
             self.curdl_code = curdl_code
 
         self.stock = ResourcesStock()
+
+    def add_resource(self, resource_name, amount):
+        """
+        Adds a resource to the organism.
+        --resource_name: codename of the resource such as 'O2' for dioxygen
+        --amount: Amount of the said resource to add to the organism's stock. Can be negative,
+                  but in this case prefer to use remove_resource for semantic.
+        Returns the amount of the said resource AFTER it was added.
+        """
+        return self.stock.add(resource_name, amount)
+
+    def remove_resource(self, resource_name, amount):
+        """
+        Removes a resource from the organism's stock.
+        Returns the amount of the said resource AFTER it was removed.
+        """
+        return self.stock.remove(resource_name, amount)
+
+    def number_of_cells(self):
+        """
+        Returns the amount of cells of the organism, central cell included.
+        """
+        return 1 + self.curdl_code.number_of_cells()

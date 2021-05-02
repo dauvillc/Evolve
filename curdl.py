@@ -49,3 +49,19 @@ class CURDL_code:
         Returns the number of cells in the curdl code.
         """
         return len([cell for cell in self.code if cell != ''])
+
+    def suppress_last_cell(self):
+        """
+        Removes the last cell code from the curdl code.
+        """
+        del self.code[-1]
+
+    def __iter__(self):
+        for cell_code in self.code:
+            yield cell_code
+
+    def __repr__(self):
+        return str(self.code)
+
+    def __str__(self):
+        return str(self.code)

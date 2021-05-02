@@ -12,34 +12,64 @@ class Organism:
     An organism is a set of cells organised in a 2D grid by its CURDL code, and capable of
     gathering and spending resources.
     """
-    def __init__(self, curdl_code=None):
+    def __init__(self, env, curdl_code=None):
         """
+        -- env: simulation Environment object
         -- curdl_code: Defines the CURDL code of the organism. Defaults to a single central unit.
         """
         self.curdl_code = CURDL_code(['', '', '', ''])
         if curdl_code is not None:
             self.curdl_code = curdl_code
+        if not self.curdl_code.check_validity():
+            print("ERROR: invalid code: ", self.curdl_code)
+            exit(-1)
+
+        # Declare the Cells() objects
+        self.cells = self.build_cells()
 
         self.stock = ResourcesStock()
+        self.env = env
+
+    def build_cells(self):
+        """
+        Builds the cells list from the curdl code.
+        """
+        # For each cell code in the CURDL code, create the corresponding Cell object
+        return [CentralCell(self)] +\
+               [_cell_types[cell_code](self) for cell_code in self.curdl_code if cell_code != '']
 
     def function(self):
         """
         Updates the organism by activating all of its cells sequentially.
         Returns True iff the organism survives.
+        -- env: simulation Environment object
         """
         # Resets all temporary resources to zero
         self.stock.clear()
 
         # Sequentially activates all cells
-        for cell_code in self.curdl_code.cell_codes():
-            cell = _cell_types[cell_code]()
-            cell.function(self)
+        for cell in self.cells:
+            cell.update()
+            cell.function()
 
         # Checks if some resources are missing. If so, the organism dies
-        for amount in self.stock.get_resources().values():
+        while self.cells and not self.missing_resources():
+            # Death of cells: The younger cells die until there are enough resources.
+            # If the central cell dies, the organism is dead
+            self.curdl_code.suppress_last_cell()
+            del self.cells[-1]
+
+        return self.cells == []
+
+    def missing_resources(self):
+        """
+        Returns the list of resources that the organism is missing
+        """
+        missing = []
+        for resource, amount in self.stock.get_resources().items():
             if amount < 0:
-                return False
-        return True
+                missing.append(resource)
+        return missing
 
     def add_resource(self, resource_name, amount):
         """
@@ -63,3 +93,6 @@ class Organism:
         Returns the amount of cells of the organism, central cell included.
         """
         return 1 + self.curdl_code.number_of_cells()
+
+    def __repr__(self):
+        return str(self.curdl_code)

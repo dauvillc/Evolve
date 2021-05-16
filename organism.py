@@ -29,6 +29,7 @@ class Organism:
 
         self.stock = ResourcesStock()
         self.env = env
+        self.age = 0
 
     def build_cells(self):
         """
@@ -46,20 +47,28 @@ class Organism:
         """
         # Resets all temporary resources to zero
         self.stock.clear()
+        self.age += 1
 
-        # Sequentially activates all cells
+        # Update all cells
+        dead_cells = []
         for cell in self.cells:
-            cell.update()
+            if cell.update():
+                # cell.update() == True means the cell has died of age
+                dead_cells.append(cell)
+
+        # Remove all dead cells
+        for cell in dead_cells:
+            self.cells.remove(cell)
+
+        # Activate all cells
+        for cell in self.cells:
             cell.function()
 
-        # Checks if some resources are missing. If so, the organism dies
-        while self.cells and not self.missing_resources():
-            # Death of cells: The younger cells die until there are enough resources.
-            # If the central cell dies, the organism is dead
-            self.curdl_code.suppress_last_cell()
+        # Checks if some resources are missing. If so, the organism loses its last cell
+        if self.cells and len(self.missing_resources()) > 0:
             del self.cells[-1]
 
-        return self.cells == []
+        return self.cells != []
 
     def missing_resources(self):
         """

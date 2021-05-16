@@ -23,18 +23,22 @@ class Simulator:
         Simulates a single timestep of the simulation.
         """
         self.time += 1
-        print("T = ", self.time)
+        event_occured = False
 
         dead_orgs = []
         for i, org in enumerate(self.organisms):
             if not org.function():
-                dead_orgs.append(i)
+                dead_orgs.append(org)
+                event_occured = True
 
         # Forget about dead organisms
-        for org_index in dead_orgs:
-            org = self.organisms.pop(org_index)
-            print("Death: ", org)
-            print("Number of organsisms: ", len(self.organisms))
+        for org in dead_orgs:
+            self.organisms.remove(org)
+            print("T=", self.time, " | Death: ", org, " at age ", org.age)
+
+        # Only print simulation information if something happened
+        if event_occured:
+            print("T=", self.time, " - Number of organsisms: ", len(self.organisms))
 
     def add_organism(self, code):
         """

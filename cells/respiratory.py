@@ -10,3 +10,6 @@ class RespiratoryCell(Cell):
     """
     def function(self):
         self.organism.add_resource("O2", 3.5)
+
+    def get_typecode(self):
+        return 'R'

@@ -1,11 +1,10 @@
 """
 Basic tests of the Simulator class
 """
-from simulator import Simulator
+from simulator import simulator
 
 
 if __name__ == "__main__":
-    simulator = Simulator()
     simulator.add_organism(['', '', '', ''])
     simulator.add_organism(['R', '', '', '', '', '', ''])
     simulator.update()
@@ -13,4 +12,4 @@ if __name__ == "__main__":
 
     print("-" * 60 + "\nSimulation until death:")
     while simulator.organisms:
-       simulator.update()
+        simulator.update()

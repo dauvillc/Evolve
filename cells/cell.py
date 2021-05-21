@@ -1,7 +1,7 @@
 """
 Defines the generic Cell class.
 """
-from numpy.random import geometric
+from tools.probas import centered_geometric
 
 
 # Lifetime of all cell types
@@ -24,7 +24,7 @@ class Cell:
         # defined in cell_types.py
         # The age at which the cell dies follows a geometric law of parameter
         # p = 1/L
-        self.death_age = geometric(1 / _cell_lifetimes[self.get_typecode()])
+        self.death_age = centered_geometric(1 / _cell_lifetimes[self.get_typecode()], 100)
 
     def update(self):
         """
@@ -33,7 +33,7 @@ class Cell:
         Returns True iff the cell dies.
         """
         self.age += 1
-        return self.age == self.death_age
+        return self.age >= self.death_age
 
     def function(self):
         """
